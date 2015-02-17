@@ -3,7 +3,7 @@ analysisData <- function(date1, date2=Sys.Date()){
   #create a folder 
   mainDir <- "C:\\Users\\Ethan\\Documents\\mydata"
   subDir <- "results"
-  
+  #check if the data is already available.
   if (file.exists(paste(mainDir, subDir, "/", sep = "/", collapse = "/"))) {
     cat("subDir exists in mainDir and is a directory")
   } else if (file.exists(paste(mainDir, subDir, sep = "/", collapse = "/"))) {

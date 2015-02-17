@@ -1,8 +1,9 @@
-source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/importData.R")
-source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/checkData.R")
-source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/processData.R")
-source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/plotData.R")
-source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/analysisData.R")
+source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/importData.R")#import data from database1.3 and spy from financial yahoo
+source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/checkData.R")#check the null entry in the database
+source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/processData.R")#come up with cumulative return, spread, change rate for s-score<-2 and s-score>2 based on the origional data
+#and save the prcessed data into csv
+source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/plotData.R")# temporarily not in use
+source("C:/Users/Ethan/Documents/mydata/codes/codes1.5/analysisData.R")#check if the target dataset had already available.
 
 time1 <- "2014-12-01"#start time
 time2 <- "2014-12-31"#end time
@@ -18,7 +19,7 @@ library(ggplot2)
 pdf(file= paste('C:/Users/Ethan/Documents/mydata/results/plot1.5from',time1,'to',time2,'.pdf'), width=10, height=6.18)
 par(mfrow=(c(1,6)))
 
-
+#plot the data
 mydata1 <- output[,c(1,3,5,6)]
 mydata1 <- melt(mydata1, id=c("center_date"))
 ggplot(data=mydata1, aes(x=center_date, y=value, group=variable, colour=variable)) + 

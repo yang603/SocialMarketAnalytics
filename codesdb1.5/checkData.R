@@ -1,4 +1,6 @@
 checkData <- function(date1, date2){
+  #find the data that should not been used and delete them
+  # eg. the stocks that been talked about in Weekend should not be taken into consideration for transaction
   date1 = time1
   date2 = time2
   if(date2 == Sys.Date()){
@@ -81,7 +83,7 @@ checkData <- function(date1, date2){
     }
     
   }
-  
+  #save the clean spy data and sma data into csv
   fileout <- paste("C:\\Users\\Ethan\\Documents\\mydata\\results\\sma-RESULTS1.5from",date1,"to",date2,".csv", sep="")
   write.table(newList$sma, file=fileout, col.names = TRUE, row.names = FALSE, quote = FALSE, sep=",")
   fileout <- paste("C:\\Users\\Ethan\\Documents\\mydata\\results\\spy-RESULTS1.5from",date1,"to",date2,".csv", sep="")
