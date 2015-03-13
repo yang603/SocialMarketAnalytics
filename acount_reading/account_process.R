@@ -53,7 +53,9 @@ conclusion$tic
 
 conclusion["source"] = ""
 for(i in 1:length(smadata$source)){
-  if(smadata$source[i]=="http://twitter.com/download/android"){
+  if(is.na(smadata$source[i])){
+    conclusion$source[i]=8
+  }else if(smadata$source[i]=="http://twitter.com/download/android"){
     conclusion$source[i]=1
   }else if((smadata$source[i]=="http://twitter.com/download/iphone")||(smadata$source[i]=="http://twitter.com/#!/download/iphone")){
     conclusion$source[i]=2
@@ -65,10 +67,10 @@ for(i in 1:length(smadata$source)){
     conclusion$source[i]=5
   }else if(smadata$source[i]=="http://www.tweetdeck.com"){
     conclusion$source[i]=6
-  }else if((smadata$source[i]=="http://stocktwits.com")||(smadata$source[i]=="http://seekingalpha.com")||(smadata$source[i]=="http://www.nasdaq.com/")||(smadata$source[i]=="http://www.freestockcharts.com")){
+  }else if((smadata$source[i]=="http://stocktwits.com")||(smadata$source[i]=="http://seekingalpha.com")||(smadata$source[i]=="http://www.nasdaq.com/")||(smadata$source[i]=="http://www.freestockcharts.com")||(smadata$source[i]=="http://stocksignaling.com/twitterapp/")){
     conclusion$source[i]=7
   }else{
     conclusion$source[i]=8
   }
 }
-
+  
