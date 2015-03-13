@@ -83,27 +83,38 @@ conclusion["tic"] = ""
 conclusion["num_tic"] = 0
 conclusion["ishttp"] = 0
 
-array <- tickers$ticker
-for(i in array){
+for(i in group_sector[2]){
+  print(i)
+  conclusion[paste("num_",i,sep="")] = 0
+}
+
+#update the statistics profile for individual twitter for corresponding account
+
+for(i in 1:range(length(group_sector_industry$Ticker))){
   count <- 0
   temp0 <- ""
-  ticker1 <- paste("\\$",i,"+$",sep="")
-  ticker2 <- paste("\\$",i," ",sep="")
+  ticker1 <- paste("\\$",group_sector_industry$Ticker[i],"+$",sep="")
+  ticker2 <- paste("\\$",group_sector_industry$Ticker[i]," ",sep="")
   num1 <- grep(ticker1,smadata$contents)
   num2 <- grep(ticker2,smadata$contents)
   num <- unique(c(num1,num2))
   for (j in num){
     temp0 <- conclusion$tic[j]
-    temp1 <- paste(temp0,i,sep="$")
+    temp1 <- paste(temp0,group_sector_industry$Ticker[i],sep="$")
     conclusion$tic[j] <- temp1
     temp0 <- conclusion$num_tic[j]
     temp1 <- temp0+1
     conclusion$num_tic[j] <- temp1
+    if(!is.na(group_sector_industry$Sector[i])){     
+      temp0 <- conclusion[,paste("num_",group_sector_industry$Sector[i],sep="")][j]
+      temp1 <- temp0+1
+      conclusion[,paste("num_",group_sector_industry$Sector[i],sep="")][j] <- temp1
+    }
   }
 }
 
-num <- grep("http://t.co/",smadata$contents)
-conclusion$ishttp[num] = 1
+
+
 ##Attention to the split!!!
 conclusion$tic
 
