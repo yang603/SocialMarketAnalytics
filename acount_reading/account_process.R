@@ -15,7 +15,45 @@ query_tic <- paste("
 tickers <- sqlQuery(ch, query_tic)
 
 #save all the tickers based on sector and industry
- 
+query_industry <- paste("
+                          select count(*), Industry from(
+                          Select t.value as Ticker, t.description as Company, s.name as Sector, i.name as Industry
+                          From tm_allinone.TERM as t 
+                              Left Join tm_allinone.TERM_SECTOR as ts 
+                                  On t.id = ts.term_id and ts.scheme = 2 
+                              Left Join tm_allinone.SECTOR as s 
+                                  On ts.sector_id = s.id 
+                              Left Join tm_allinone.TERM_INDUSTRY as ti 
+                                  On t.id = ti.term_id and ti.scheme = 2 
+                              Left Join tm_allinone.INDUSTRY as i 
+                                  On ti.industry_id = i.id 
+                          Order By t.Value asc) a where Industry is not null
+                          group by Industry
+                          order by count(*) DESC
+                          limit 10
+                          ")
+
+group_industry <- sqlQuery(ch, query_industry)
+
+query_sector <- paste("
+                          select count(*), Sector from(
+                          Select t.value as Ticker, t.description as Company, s.name as Sector, i.name as Industry
+                          From tm_allinone.TERM as t 
+                              Left Join tm_allinone.TERM_SECTOR as ts 
+                                  On t.id = ts.term_id and ts.scheme = 2 
+                              Left Join tm_allinone.SECTOR as s 
+                                  On ts.sector_id = s.id 
+                              Left Join tm_allinone.TERM_INDUSTRY as ti 
+                                  On t.id = ti.term_id and ti.scheme = 2 
+                              Left Join tm_allinone.INDUSTRY as i 
+                                  On ti.industry_id = i.id 
+                          Order By t.Value asc) a where Sector is not null
+                          group by Sector
+                          order by count(*) DESC
+                          limit 10
+                          ")
+
+group_sector <- sqlQuery(ch, query_sector)
 
 # read in twitter in csv format
 
