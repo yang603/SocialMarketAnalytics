@@ -1,10 +1,13 @@
-
 library("RODBC")
+
+date1 <- '2015-03-01'
+date2 <- '2015-03-02'
+ticks_group <- paste("'GOOG'","'AAPL'",sep=",")
 
 options(digits=4)
 #save all the tickers in the tickers
 odbcCloseAll()
-ch = odbcConnect("Falcon_3326")
+ch = odbcConnect("Diamond_3366")
 query <- paste("SET time_zone='US/Eastern';")
 sqlQuery(ch, query)
 query <- paste("SET Transaction Isolation Level Read Uncommitted;")
@@ -74,10 +77,29 @@ group_sector_industry <- sqlQuery(ch, query_sector_industry)
 
 
 # read in twitter in csv format
+# 
+# smafileout <- paste("C:\\Users\\Ethan\\Documents\\mydata\\results\\twitter_info.csv", sep="")
+# smadata <- read.csv(gsub(" ","", smafileout, fixed=TRUE), header = TRUE, sep = ",",stringsAsFactors=FALSE)
 
-smafileout <- paste("C:\\Users\\Ethan\\Documents\\mydata\\results\\twitter_info.csv", sep="")
-smadata <- read.csv(gsub(" ","", smafileout, fixed=TRUE), header = TRUE, sep = ",",stringsAsFactors=FALSE)
-conclusion <- smadata[c("posted_date","posting_account","posting_account_id")]
+smadata <- sqlQuery(ch, "use tm_allinone;")
+
+twitter_info <- paste("   select * from DIGEST d
+                          join DIGEST_SCORE ds on ds.digest_id = d.id
+                          join HIT_SCORE hs on hs.digest_score_id = ds.id
+                          join TERM t on t.id = hs.term_id
+                          join ACCOUNT_RATING_SERIES rs on rs.subject_id = d.account_id
+                          join ACCOUNT_RATING ar on ar.time_series_id = rs.id
+                          where t.value in
+                          (",ticks_group,")
+                            and d.posted_date >= '",date1,"' and posted_date <'",date2,"'
+                            and d.language_code = 'en'
+                            and ar.value > 0.0005
+                            and ds.job_id = 117
+                          order by d.posted_date;       
+                          ")
+
+smadata <- sqlQuery(ch, twitter_info)
+conclusion <- smadata[c("posted_date","posting_account","posting_account_id","contents","avg_sent","low_sent","high_sent","description")]
 
 conclusion["tic"] = ""
 conclusion["num_tic"] = 0
