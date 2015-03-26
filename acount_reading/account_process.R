@@ -164,7 +164,7 @@ for(i in 1:length(smadata$source)){
 
 library(reshape)
 library(ggplot2)
-pdf(file= paste('C:/Users/Ethan/Documents/account_reading',time1,'to',time2,'.pdf'), width=10, height=6.18)
+pdf(file= paste('C:/Users/Ethan/Documents/account_reading',date1,'to',date2,'.pdf'), width=10, height=6.18)
 par(mfrow=(c(1,6)))
 mydata1 <- scores_info[,c(1,2,12)]
 mydata1 <- melt(mydata1, id=c("as_of_date","ticker"))
