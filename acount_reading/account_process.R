@@ -74,14 +74,14 @@ query_sector_industry <- paste("
 
 group_sector_industry <- sqlQuery(ch, query_sector_industry)
 
-
-
-# read in twitter in csv format
-# 
-# smafileout <- paste("C:\\Users\\Ethan\\Documents\\mydata\\results\\twitter_info.csv", sep="")
-# smadata <- read.csv(gsub(" ","", smafileout, fixed=TRUE), header = TRUE, sep = ",",stringsAsFactors=FALSE)
-
 smadata <- sqlQuery(ch, "use tm_allinone;")
+
+score_info <- paste("   SELECT * FROM pubv2.SUMMARY_BY_TICKER where ticker in
+                          (",ticks_group,")
+                            and center_date >='",date1,"' and center_date <'",date2,"' 
+                          ")
+
+scores_info <- sqlQuery(ch, score_info)
 
 twitter_info <- paste("   select * from DIGEST d
                           join DIGEST_SCORE ds on ds.digest_id = d.id
@@ -138,7 +138,6 @@ for(i in 1:range(length(group_sector_industry$Ticker))){
 
 
 ##Attention to the split!!!
-conclusion$tic
 
 conclusion["source"] = ""
 for(i in 1:length(smadata$source)){
@@ -162,4 +161,49 @@ for(i in 1:length(smadata$source)){
     conclusion$source[i]=8
   }
 }
-  
+
+library(reshape)
+library(ggplot2)
+pdf(file= paste('C:/Users/Ethan/Documents/account_reading',time1,'to',time2,'.pdf'), width=10, height=6.18)
+par(mfrow=(c(1,6)))
+mydata1 <- scores_info[,c(1,2,12)]
+mydata1 <- melt(mydata1, id=c("as_of_date","ticker"))
+ggplot(data=mydata1, aes(x=as_of_date, y=value, group=ticker, colour=ticker)) + 
+  geom_line() + 
+  theme(legend.position="bottom") +
+  xlab("Date") + ylab("z-score") +
+  ggtitle(paste("Z-SCORE\r\n",date1," TO ",date2))
+
+mydata1 <- scores_info[,c(1,2,15)]
+mydata1 <- melt(mydata1, id=c("as_of_date","ticker"))
+ggplot(data=mydata1, aes(x=as_of_date, y=value, group=ticker, colour=ticker)) + 
+  geom_line() + 
+  theme(legend.position="bottom") +
+  xlab("Date") + ylab("Vol") +
+  ggtitle(paste("VOLUME\r\n",date1," TO ",date2))
+
+mydata1 <- scores_info[,c(1,2,18)]
+mydata1 <- melt(mydata1, id=c("as_of_date","ticker"))
+ggplot(data=mydata1, aes(x=as_of_date, y=value, group=ticker, colour=ticker)) + 
+  geom_line() + 
+  theme(legend.position="bottom") +
+  xlab("Date") + ylab("Vol-z") +
+  ggtitle(paste("VOLUME-Z\r\n",date1," TO ",date2))
+
+mydata1 <- scores_info[,c(1,2,25)]
+mydata1 <- melt(mydata1, id=c("as_of_date","ticker"))
+ggplot(data=mydata1, aes(x=as_of_date, y=value, group=ticker, colour=ticker)) + 
+  geom_line() + 
+  theme(legend.position="bottom") +
+  xlab("Date") + ylab("Dispersion") +
+  ggtitle(paste("DISPERSION\r\n",date1," TO ",date2))
+
+mydata1 <- scores_info[,c(1,2,26)]
+mydata1 <- melt(mydata1, id=c("as_of_date","ticker"))
+ggplot(data=mydata1, aes(x=as_of_date, y=value, group=ticker, colour=ticker)) + 
+  geom_line() + 
+  theme(legend.position="bottom") +
+  xlab("Date") + ylab("Buzz") +
+  ggtitle(paste("BUZZ\r\n",date1," TO ",date2))
+
+dev.off()
