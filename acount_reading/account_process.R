@@ -1,8 +1,8 @@
 library("RODBC")
 
-date1 <- '2015-03-01'
-date2 <- '2015-03-02'
-ticks_group <- paste("'GOOG'","'AAPL'",sep=",")
+date1 <- '2015-02-01'
+date2 <- '2015-02-05'
+ticks_group <- paste("'GOOG'","'AAPL'","'MSFT'","'LNKD'",sep=",")
 
 options(digits=4)
 #save all the tickers in the tickers
